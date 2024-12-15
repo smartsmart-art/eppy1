@@ -123,7 +123,7 @@ insulation_material.Specific_Heat = 1000.0  # 假设比热容，单位J/kg - K
 # 添加构造对象（包含保温层）到IDF文件
 construction = idf.newidfobject("Construction")
 construction.Name = "WallConstruction"
-construction.Layers = ["InsulationMaterial"]
+construction.Layers = ["I   nsulationMaterial"]
 construction.Layer_Thickness = [0.1]  # 假设保温层厚度为0.1m
 
 for wall in [wall1, wall2, wall3, wall4]:
@@ -131,3 +131,35 @@ for wall in [wall1, wall2, wall3, wall4]:
 
 # 保存IDF文件
 idf.saveas("1ZoneBoxBuilding.idf")
+
+#    - 在上述代码中，`1ZoneBoxBuilding.idf`是保存的文件名，你可以根据自己的需求修改文件名和保存路径。需要注意的是，`C:/EnergyPlusV9 - 2 - 0/Energy+.idd`这个路径是`IDF`文件格式定义文件（`.idd`）的路径，你需要将其替换为你自己电脑上实际的EnergyPlus版本对应的`.idd`文件路径。
+#
+# 2. **进行模拟**
+#    - **通过EnergyPlus软件进行模拟**
+#      - 安装并打开EnergyPlus软件。在EnergyPlus软件界面中，打开刚才保存的`1ZoneBoxBuilding.idf`文件。然后在软件中设置模拟参数，如模拟的时间周期（例如，一年的能耗模拟可以设置起始日期和结束日期）、气象文件（`.epw`文件）等。气象文件包含了模拟所需的当地气象数据，如温度、湿度、太阳辐射等。
+#      - 设置好所有参数后，在EnergyPlus软件中运行模拟。模拟完成后，EnergyPlus会生成一系列的输出文件，包括`.eso`（Energy Simulation Output）文件，它包含了模拟过程中的详细数据，如每个时间步长的室内温度、能耗等信息；还有`.html`文件，用于查看模拟结果的概要信息。
+#    - **通过命令行进行模拟（更灵活，适用于自动化流程）**
+#      - 找到EnergyPlus软件的安装目录，在命令行（例如，Windows的`cmd`或者Linux的`bash`）中切换到该目录。假设EnergyPlus软件安装在`C:/EnergyPlusV9 - 2 - 0/`目录下，且`1ZoneBoxBuilding.idf`文件保存在当前目录下，使用以下命令进行模拟：
+
+# - 其中，`-w`
+# 选项后面跟着气象文件（`.epw
+# `文件）的路径，`1
+# ZoneBoxBuilding.idf
+# `是要模拟的建筑模型文件。你需要将气象文件路径替换为实际使用的气象文件的真实路径。这种方式可以方便地将模拟过程集成到自动化脚本中，例如在Python脚本中通过
+# `subprocess`
+# 模块来调用这个命令进行模拟。以下是一个简单的
+# `subprocess`
+# 调用示例：
+# ```python
+import subprocess
+
+# 假设EnergyPlus安装目录和idf文件、气象文件路径如下
+energyplus_path = "C:/EnergyPlusV9 - 2 - 0/energyplus"
+weather_file_path = "C:/Path/To/WeatherFile.epw"
+idf_file_path = "1ZoneBoxBuilding.idf"
+command = [energyplus_path, "-w", weather_file_path, idf_file_path]
+try:
+    subprocess.check_call(command)
+    print("模拟成功完成。")
+except subprocess.CalledProcessError as e:
+    print("模拟过程出现错误:", e)
